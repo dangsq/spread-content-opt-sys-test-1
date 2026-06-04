@@ -31,9 +31,9 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </div>
-        <h1 className="text-[44px] font-bold text-[#1d1d1f] tracking-tight mb-3">Spread Harness</h1>
+        <h1 className="text-[44px] font-bold text-[#1d1d1f] tracking-tight mb-3">PropagateMachine</h1>
         <p className="text-[18px] text-[#86868b] max-w-md leading-relaxed mb-2">
-          面向传播的内容生成系统
+          传播机器 — 面向传播的内容生成系统
         </p>
         <p className="text-[14px] text-[#aeaeb2] max-w-sm leading-relaxed mb-10">
           先分析目标人群画像，再针对性地优化传播内容 — 让每一篇内容都击中目标受众
@@ -65,7 +65,7 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </div>
-        <h1 className="text-[30px] font-bold text-[#1d1d1f] tracking-tight">欢迎使用 Spread Harness</h1>
+        <h1 className="text-[30px] font-bold text-[#1d1d1f] tracking-tight">欢迎使用 PropagateMachine</h1>
         <p className="text-[15px] text-[#86868b] mt-2 max-w-md mx-auto leading-relaxed">
           两步搞定内容传播优化：先分析目标人群，再优化传播内容
         </p>

@@ -23,7 +23,7 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-[15px] font-semibold text-[#1d1d1f]">Spread Harness</span>
+            <span className="text-[15px] font-semibold text-[#1d1d1f]">PropagateMachine</span>
           </Link>
           {user && (
             <div className="flex items-center gap-1">

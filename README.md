@@ -1,4 +1,4 @@
-# Spread Content Optimization System
+# PropagateMachine — 传播机器
 
 面向传播的内容生成系统 — 基于用户画像分析驱动，先分析目标人群画像，再针对性地优化传播内容。
 
