@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { personaApi } from "@/lib/api";
+
+export default function PersonaDetailPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>}>
+      <PersonaDetailInner />
+    </Suspense>
+  );
+}
 
 interface PersonaDetail {
   id: string;
@@ -57,13 +65,16 @@ const icons: Record<string, string> = {
   "教育背景": "🎓", "职业类型": "💼", "家庭状况": "🏠", "消费特征": "🛒", "生活方式": "🌴",
 };
 
-export default function PersonaDetailPage() {
-  const { id } = useParams();
+function PersonaDetailInner() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   const [data, setData] = useState<PersonaDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    personaApi.get(id as string).then((res) => {
+    if (!id) { setLoading(false); return; }
+    personaApi.get(id).then((res) => {
       setData(res.data);
       setLoading(false);
     });
@@ -92,7 +103,6 @@ export default function PersonaDetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* ── Back ── */}
         <Link href="/personas" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-8 transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -100,18 +110,15 @@ export default function PersonaDetailPage() {
           返回画像库
         </Link>
 
-        {/* ══════════ HERO HEADER ══════════ */}
+        {/* HERO HEADER */}
         <div className="relative rounded-3xl overflow-hidden mb-8 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800">
-          {/* 装饰背景 */}
           <div className="absolute inset-0">
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.05] rounded-full -translate-y-1/2 translate-x-1/3" />
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/[0.03] rounded-full translate-y-1/2 -translate-x-1/3" />
             <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)", backgroundSize: "24px 24px" }} />
           </div>
-
           <div className="relative px-8 py-10">
             <div className="flex items-start gap-6">
-              {/* Avatar */}
               <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-4xl font-bold text-white shrink-0">
                 {data.title.charAt(0)}
               </div>
@@ -119,22 +126,17 @@ export default function PersonaDetailPage() {
                 <div className="flex items-center gap-4 flex-wrap">
                   <h1 className="text-3xl font-bold text-white tracking-tight">{data.title}</h1>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-semibold border border-emerald-400/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    已完成
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />已完成
                   </span>
                 </div>
                 <p className="text-blue-100/80 text-sm mt-2 max-w-2xl">{data.description}</p>
                 <div className="flex items-center gap-2 mt-4">
                   {data.platforms.map((p) => (
-                    <span key={p} className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium border border-white/10">
-                      {p}
-                    </span>
+                    <span key={p} className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium border border-white/10">{p}</span>
                   ))}
                 </div>
               </div>
             </div>
-
-            {/* ── KPI Cards ── */}
             {r && (
               <div className="grid grid-cols-3 gap-4 mt-8">
                 <KpiCard icon="📊" value={String(r.total_posts)} label="采集文章" color="bg-blue-500" />
@@ -145,10 +147,8 @@ export default function PersonaDetailPage() {
           </div>
         </div>
 
-        {/* ══════════ CONTENT GRID ══════════ */}
         {a && (
           <div className="space-y-6">
-            {/* ── 基础画像 ── */}
             <Section title="基础画像" icon="👤">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {Object.entries(a.basic_profile).map(([k, v], i) => (
@@ -165,9 +165,7 @@ export default function PersonaDetailPage() {
               </div>
             </Section>
 
-            {/* ── 兴趣标签 + 人群分布 ── */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* 兴趣标签 */}
               <div className="lg:col-span-2">
                 <Section title="兴趣标签" icon="🏷️">
                   <div className="flex flex-wrap gap-3">
@@ -182,21 +180,16 @@ export default function PersonaDetailPage() {
                       <p className="text-xs text-gray-400 font-semibold mb-2 uppercase tracking-wider">爬取高频词</p>
                       <div className="flex flex-wrap gap-2">
                         {r.sample_keywords.map((kw, i) => (
-                          <span key={i} className="px-2.5 py-1 rounded-lg bg-gray-50 text-gray-600 text-xs font-medium border border-gray-100">
-                            {kw}
-                          </span>
+                          <span key={i} className="px-2.5 py-1 rounded-lg bg-gray-50 text-gray-600 text-xs font-medium border border-gray-100">{kw}</span>
                         ))}
                       </div>
                     </div>
                   )}
                 </Section>
               </div>
-
-              {/* 人群特征 */}
               <div className="lg:col-span-1">
                 <Section title="人群特征" icon="📊">
                   <div className="space-y-5">
-                    {/* 性别环形图 */}
                     {r?.demographic_hints?.gender_distribution && (
                       <div className="flex items-center gap-6">
                         <div className="relative w-24 h-24 shrink-0">
@@ -216,19 +209,11 @@ export default function PersonaDetailPage() {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-blue-500" />
-                            <span className="text-xs text-gray-600">男性</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-pink-500" />
-                            <span className="text-xs text-gray-600">女性</span>
-                          </div>
+                          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-blue-500" /><span className="text-xs text-gray-600">男性</span></div>
+                          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-pink-500" /><span className="text-xs text-gray-600">女性</span></div>
                         </div>
                       </div>
                     )}
-
-                    {/* 人群属性 */}
                     <div className="space-y-3">
                       <BarItem label="年龄" value={r?.demographic_hints.age_range || "25-35"} pct={85} gradient="from-blue-500 to-cyan-400" />
                       <BarItem label="城市" value={r?.demographic_hints.city_tier || "一二线"} pct={72} gradient="from-violet-500 to-purple-400" />
@@ -239,7 +224,6 @@ export default function PersonaDetailPage() {
               </div>
             </div>
 
-            {/* ── 内容偏好 ── */}
             <Section title="内容偏好" icon="📋">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {Object.entries(a.content_preferences).map(([k, v], i) => (
@@ -254,21 +238,17 @@ export default function PersonaDetailPage() {
               </div>
             </Section>
 
-            {/* ── 痛点 + 策略 ── */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Section title="痛点分析" icon="⚠️">
                 <div className="space-y-3">
                   {a.pain_points.map((item, i) => (
                     <div key={i} className="relative flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-rose-50 to-white border border-rose-100/50 hover:from-rose-100 transition-colors">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
-                        {i + 1}
-                      </div>
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">{i + 1}</div>
                       <p className="text-sm text-gray-700 leading-relaxed pt-1">{item}</p>
                     </div>
                   ))}
                 </div>
               </Section>
-
               <Section title="传播策略" icon="💡">
                 <div className="space-y-3">
                   {Object.entries(a.communication_strategy).map(([k, v], i) => {
@@ -293,7 +273,6 @@ export default function PersonaDetailPage() {
               </Section>
             </div>
 
-            {/* ── CTA ── */}
             <div className="flex justify-center pt-6 pb-4">
               <Link
                 href={`/optimize?persona_id=${data.id}`}
@@ -315,8 +294,6 @@ export default function PersonaDetailPage() {
     </div>
   );
 }
-
-/* ─── Components ─── */
 
 function Section({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
   return (

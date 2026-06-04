@@ -69,7 +69,7 @@ export default function PersonasPage() {
                   <div>
                     <div className="flex items-start justify-between mb-2">
                       <Link
-                        href={`/personas/${p.id}`}
+                        href={`/personas/detail?id=${p.id}`}
                         className="text-[15px] font-semibold text-[#1d1d1f] hover:text-[#0071e3] transition-colors leading-snug truncate"
                       >
                         {p.title}
@@ -106,7 +106,7 @@ export default function PersonasPage() {
                     </div>
                     <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Link
-                        href={`/personas/${p.id}`}
+                        href={`/personas/detail?id=${p.id}`}
                         className="btn-ghost p-1.5"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
