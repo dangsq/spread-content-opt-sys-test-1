@@ -26,7 +26,7 @@ export default function NewPersonaPage() {
     setLoading(true);
     try {
       const res = await personaApi.create({ title, description, platform });
-      router.push(`/personas/${res.data.id}`);
+      router.push(`/personas/detail?id=${res.data.id}`);
     } catch (err) {
       console.error(err);
       setLoading(false);
